@@ -1,0 +1,6 @@
+
+kicad			PCB and Schematic Designer
+word			Microsoft Word Document Editor
+cmd			Command Prompt
+powershell		Windows Powershell
+chrome			Google Chrome Web Browser
