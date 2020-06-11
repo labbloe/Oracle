@@ -1,0 +1,5 @@
+CMD logs are temp files that may include personal information 
+pertaining to your computer or user profile. Not all logs are
+deleted as the program may use information in them for later
+use. All .txt file in cmdLogs path are under .gitignore until
+a more permanent system is in place. 
