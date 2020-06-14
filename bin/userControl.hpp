@@ -50,6 +50,8 @@ void InputSelection(string fileadd, string input)
             run_com(fileadd);
         if(match == "server")
             server_com();
+        if(match == "inventory")
+            inventory_com(fileadd);
     }
 
 }

@@ -9,3 +9,4 @@ version		Prints current Oracle software version number
 clear		clears the console window
 run		Runs a specified program
 server		Opens Remote Server Menu
+inventory	Modify component inventory data

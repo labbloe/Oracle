@@ -24,6 +24,7 @@ const string versionDate = "June 5, 2020";
 
 #include "Messages.hpp"
 #include "status.hpp"
+#include "data.h"
 #include "userControl.h"
 
 

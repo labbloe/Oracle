@@ -1,2 +1,3 @@
 
 bin/cmdLogs/*.txt
+bin/data/storage/*.csv

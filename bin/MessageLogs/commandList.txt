@@ -6,3 +6,4 @@ version
 clear
 run
 server
+inventory
