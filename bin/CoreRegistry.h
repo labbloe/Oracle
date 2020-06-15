@@ -20,7 +20,7 @@ using std::endl;
 using std::fstream;
 
 const string version = "0.0.1";
-const string versionDate = "June 5, 2020";
+const string versionDate = "June 14, 2020";
 
 #include "Messages.hpp"
 #include "status.hpp"

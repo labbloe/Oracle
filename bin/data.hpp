@@ -10,13 +10,68 @@ void inventory_com(string fileadd)
     string filePath = fileadd + "/data/storage/inventory.csv";
     printFile(fileadd + "/data/storage/invMsg.txt");
     getline(cin,userInput,'\n');
+
+    fstream(myFile);
+    string line;
+    myFile.open(fileadd + "/data/storage/inv_info.dat");
+    getline(myFile,line,',');
+    myFile.close();
+    int numComponents = stoi(line);
+    component *comp = new component[numComponents];
+
+    //fill_component_list(filePath,*&comp);
+    myFile.open(fileadd + "/data/storage/inventory.csv");
+    for(int i=0; i<numComponents; i++)
+    {
+        getline(myFile,line,',');
+        strcpy(comp[i].name,line.c_str());
+        getline(myFile,line,',');
+        strcpy(comp[i].desc,line.c_str());
+        getline(myFile,line,',');
+        strcpy(comp[i].area,line.c_str());
+        getline(myFile,line,',');
+        comp[i].val = stoi(line);
+        getline(myFile,line,',');
+        comp[i].qty = stoi(line);
+    }
+
     if(userInput == "print")
-        inventoryPrint(filePath);
+    {
+        cout<<"NAME      "
+            <<"DESCRIPTION                                       "
+            <<"AREA                "
+            <<"VALUE"
+            <<"  QTY\n";
+        for(int i=0; i<numComponents; i++)
+        {
+            comp[i].inventoryPrint(filePath);
+        }
+        cout<<endl;
+    }
+        //inventoryPrint(filePath);
     if(userInput == "add");
         //inventoryAdd(filePath);
+    
+    delete[] comp;
 }
 
-void inventoryPrint(string filePath)
+void component::inventoryPrint(string filePath)
+{
+    for(int i=0; i<10; i++)
+        cout<<name[i];
+    for(int i=0; i<50; i++)
+        cout<<desc[i];
+    for(int i=0; i<20; i++)
+        cout<<area[i];
+    cout<<"$"<<val<<"  "<<qty;
+}
+
+void inventoryAdd(string filePath,int numComponents)
+{
+
+}
+
+/*void inventoryPrint(string filePath)
 {
     fstream(myFile);
     int width = 6;
@@ -70,4 +125,4 @@ void inventoryPrint(string filePath)
         }
     }
     else cout<< "Unable to open file: "<<filePath<<endl;
-}
+}*/
