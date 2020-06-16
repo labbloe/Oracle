@@ -21,108 +21,56 @@ void inventory_com(string fileadd)
 
     //fill_component_list(filePath,*&comp);
     myFile.open(fileadd + "/data/storage/inventory.csv");
+    cout<<std::fixed<<std::setprecision(2);
     for(int i=0; i<numComponents; i++)
     {
         getline(myFile,line,',');
-        strcpy(comp[i].name,line.c_str());
+        //strcpy(comp[i].name,line.c_str());
+        comp[i].name = line;
         getline(myFile,line,',');
-        strcpy(comp[i].desc,line.c_str());
+        //strcpy(comp[i].desc,line.c_str());
+        comp[i].desc = line;
         getline(myFile,line,',');
-        strcpy(comp[i].area,line.c_str());
+        //strcpy(comp[i].area,line.c_str());
+        comp[i].area = line;
         getline(myFile,line,',');
-        comp[i].val = stoi(line);
+        comp[i].val = (((float) stoi(line))/100);
         getline(myFile,line,',');
         comp[i].qty = stoi(line);
+        getline(myFile,line,'\n');
     }
+    myFile.close();
 
     if(userInput == "print")
     {
-        cout<<"NAME      "
-            <<"DESCRIPTION                                       "
-            <<"AREA                "
-            <<"VALUE"
-            <<"  QTY\n";
+        cout<<setw(20)<<left<<"\nNAME"<<setw(49)<<left<<"DESCRIPTION"
+            <<setw(19)<<left<<"AREA"<<setw(7)<<left<<"VALUE"
+            <<setw(4)<<left<<"QTY"<<"\n";
+        for(int j=0; j<101; j++)
+            cout<<"=";
+        cout<<'\n';
+
         for(int i=0; i<numComponents; i++)
         {
-            comp[i].inventoryPrint(filePath);
+            comp[i].inventoryPrint(i);
+            cout<<'\n';
         }
-        cout<<endl;
+        cout<<endl<<endl;
     }
-        //inventoryPrint(filePath);
     if(userInput == "add");
         //inventoryAdd(filePath);
     
     delete[] comp;
 }
 
-void component::inventoryPrint(string filePath)
+void component::inventoryPrint(int curComponent)
 {
-    for(int i=0; i<10; i++)
-        cout<<name[i];
-    for(int i=0; i<50; i++)
-        cout<<desc[i];
-    for(int i=0; i<20; i++)
-        cout<<area[i];
-    cout<<"$"<<val<<"  "<<qty;
+    cout<<setw(19)<<left<<name<<setw(49)<<left<<desc
+        <<setw(19)<<left<<area<<"$"<<setw(6)<<left<<val
+        <<setw(4)<<left<<qty;
 }
 
 void inventoryAdd(string filePath,int numComponents)
 {
 
 }
-
-/*void inventoryPrint(string filePath)
-{
-    fstream(myFile);
-    int width = 6;
-    int height = 0;
-    string line;
-    myFile.open(filePath);
-    while(myFile.eof())
-    {
-        getline(myFile,line,'\n');
-        height++;
-    }
-    myFile.close();
-    height = height - 6;
-    string inv[width][height];
-
-    inv[0][0] = "NAME";
-    inv[1][0] = "DESCRIPTION";
-    inv[2][0] = "AREA";
-    inv[3][0] = "SUPPLIER";
-    inv[4][0] = "UNIT VALUE";
-    inv[5][0] = "QTY";
-
-    myFile.open(filePath);
-    if(myFile.is_open())
-    {
-        while(line != "Name,Description,Area,Supplier,Unit Value,Qty,")
-            getline (myFile,line,'\n');
-
-        int i = 0;
-        int j = 1;
-        while(myFile.eof())
-        {
-            getline(myFile,line,',');
-            if(i > width)
-            {
-                i = 0;
-                j++;
-            }
-            inv[i][j] = line;
-        }
-        myFile.close();
-
-        for(int x=0; x<height; x++)
-        {
-            for(int z=0; z<width; z++)
-            {
-                cout<<inv[z][x];
-                if(z = width)
-                    cout<<endl;
-            }
-        }
-    }
-    else cout<< "Unable to open file: "<<filePath<<endl;
-}*/
