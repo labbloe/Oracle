@@ -9,6 +9,7 @@ void inventory_com(string fileadd)
     string userInput;
     string filePath = fileadd + "/data/storage/inventory.csv";
     printFile(fileadd + "/data/storage/invMsg.txt");
+    cout<<"Inventory:> ";
     getline(cin,userInput,'\n');
 
     fstream(myFile);
@@ -25,13 +26,10 @@ void inventory_com(string fileadd)
     for(int i=0; i<numComponents; i++)
     {
         getline(myFile,line,',');
-        //strcpy(comp[i].name,line.c_str());
         comp[i].name = line;
         getline(myFile,line,',');
-        //strcpy(comp[i].desc,line.c_str());
         comp[i].desc = line;
         getline(myFile,line,',');
-        //strcpy(comp[i].area,line.c_str());
         comp[i].area = line;
         getline(myFile,line,',');
         comp[i].val = (((float) stoi(line))/100);
@@ -41,24 +39,39 @@ void inventory_com(string fileadd)
     }
     myFile.close();
 
-    if(userInput == "print")
+    while(userInput != "exit")
     {
-        cout<<setw(20)<<left<<"\nNAME"<<setw(49)<<left<<"DESCRIPTION"
-            <<setw(19)<<left<<"AREA"<<setw(7)<<left<<"VALUE"
-            <<setw(4)<<left<<"QTY"<<"\n";
-        for(int j=0; j<101; j++)
-            cout<<"=";
-        cout<<'\n';
-
-        for(int i=0; i<numComponents; i++)
+        if(userInput == "print")
         {
-            comp[i].inventoryPrint(i);
+            cout<<setw(20)<<left<<"\nNAME"<<setw(49)<<left<<"DESCRIPTION"
+                <<setw(19)<<left<<"LOCATION"<<setw(7)<<left<<"VALUE"
+                <<setw(4)<<left<<"QTY"<<"\n";
+            for(int j=0; j<101; j++)
+                cout<<"=";
             cout<<'\n';
+
+            for(int i=0; i<numComponents; i++)
+            {
+                comp[i].inventoryPrint(i);
+                cout<<'\n';
+            }
+            cout<<endl;
+            cout<<"Inventory:> ";
+            getline(cin,userInput,'\n');
         }
-        cout<<endl<<endl;
+        else if (userInput == "add")
+        {
+            inventoryAdd(filePath,numComponents);
+            cout<<"Inventory:> ";
+            getline(cin,userInput,'\n');
+        }
+        
+        else
+        {
+            cout<<"'"<<userInput<<"' is an unrecognized command\nInventory:> ";
+            getline(cin,userInput,'\n');
+        }
     }
-    if(userInput == "add");
-        //inventoryAdd(filePath);
     
     delete[] comp;
 }
@@ -72,5 +85,52 @@ void component::inventoryPrint(int curComponent)
 
 void inventoryAdd(string filePath,int numComponents)
 {
+    cout<<"Add new component(s) by using the following format\n"
+        <<"NAME,DESCRIPTION,LOCATION,VALUE,QTY,\n"
+        <<"WRITE VALUE WITHOUT DECIMAL. EX: 0.10 -> 010\n"
+        <<"Type 'exit' to leave.\n\nInventory:add> ";
 
+    string input;
+    int commaCnt = 0;
+    
+    while(1)
+    {
+        getline(cin,input,'\n');
+        if(input == "exit")
+            return;
+        if(addCheck(input) == true)
+        {
+            component *temp = new component[numComponents + 1];
+            for(int i=0; i<numComponents; i++)
+            {
+                //temp[i] = comp[i];
+            }
+        }
+    }
+
+    cout<<"\n";
+}
+
+bool addCheck(string input)
+{
+    int commaCnt = 0;
+    for(int i=0; i<input.length(); i++)
+    {
+        if(input[i] = ',')
+            commaCnt++;
+    }
+    if(commaCnt != 5)
+    {
+        cout<<"ERROR: Incorrect input format\n";
+        cout<<"Inventory:add> ";
+        return false;
+    }
+    else
+    {
+        cout<<"Inventory:add> ";
+        return true;
+    }
+    
+
+    return false;
 }

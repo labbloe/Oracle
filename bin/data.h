@@ -20,16 +20,16 @@ class component
         string name;
         string desc;
         string area;
-        //char name[20] = {'\0'};
-        //char desc[50] = {'\0'};
-        //char area[20] = {'\0'};
 
         //prints entire inventory list
         void inventoryPrint(int curComponent);
-
-        //add component to inventory list
-        void inventoryAdd(string filePath,int numComponents);
 };
+
+//add components to inventory list
+void inventoryAdd(string filePath,int numComponents);
+
+//ensures correct user input for adding component to list
+bool addCheck(string input);
 
 //fills comp dynamic array with all components in inventory
 void fill_component_list(string filePath, component *comp);
