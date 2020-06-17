@@ -54,6 +54,12 @@ void inventory_com(string fileadd)
             cout<<"Inventory:> ";
             getline(cin,userInput,'\n');
         }
+        else if (userInput == "remove")
+        {
+          inventoryRemove(fileadd,numComponents,comp);
+          cout<<"Inventory:> ";
+          getline(cin,userInput,'\n');
+        }
         
         else
         {
@@ -99,7 +105,7 @@ void inventoryAdd(string fileadd,int &numComponents,component comp[])
                 myFile<<comp[i].name<<","
                       <<comp[i].desc<<","
                       <<comp[i].area<<","
-                      <<comp[i].val<<","
+                      <<(comp[i].val*100)<<","
                       <<comp[i].qty<<",\n";
             }
             myFile << input;
@@ -152,6 +158,7 @@ void fill_component_list(string filePath,component comp[],int numComponents)
     cout<<std::fixed<<std::setprecision(2);
     for(int i=0; i < numComponents; i++)
     {
+        cout<<"i: "<<i<<endl;
         getline(myFile,line,',');
         comp[i].name = line;
         getline(myFile,line,',');
@@ -165,4 +172,111 @@ void fill_component_list(string filePath,component comp[],int numComponents)
         getline(myFile,line,'\n');
     }
     myFile.close();
+}
+
+bool searchCheck(string input,component comp[],int numComponents, int &comMatch)
+{
+    int inLength = input.length();
+    int temp = 0;
+    int cnt = 0;
+    string comName;
+    for(int i=0; i<input.length(); i++)
+    {
+        if(input[i] == ',')
+            cnt++;
+        if(cnt == 0)
+            comName += input[i];
+        else
+            break;
+    }
+    if(cnt == 1)
+    {
+        for(int i=0; i<numComponents; i++)
+        {
+            if(comName == comp[i].name)
+            {   
+                comMatch = i;
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
+void inventoryRemove(string fileadd, int &numComponents, component comp[])
+{
+    cout<<"\nType 'exit' to leave menu\n"
+        <<"Use the following format: name_of_item,qty_to_remove\n"
+        <<"Inventory:remove> ";
+    string input;
+    string comName;
+    string tmpQty;
+    int comMatch;
+    int cnt = 0;
+    bool match = false;
+    while((match == false) && (input != "exit"))
+    {
+        getline(cin,input,'\n');
+        if(searchCheck(input,comp,numComponents,comMatch) == false)
+        {
+            if(input != "exit")
+                cout<<"ERROR: NAME NOT FOUND\nInventory:remove> ";
+        }
+        else if(input != "exit");
+        {
+            match = true;
+            for(int i=0; i<input.length(); i++)
+            {
+                if(input[i] == ',')
+                {
+                    cnt++;
+                    i++;
+                }
+                if(cnt == 0)
+                    comName += input[i];
+                else
+                    tmpQty += input[i];
+            }
+        }
+    }
+    if((match == true)&&(input != "exit"))
+    {
+        comp[comMatch].qty -= stoi(tmpQty);
+        if(comp[comMatch].qty <= 0)
+        {
+            cout<<"\nThis component has a QTY of Zero. Would\n"
+                <<"you like to remove it? [y/n] ";
+            string tempin;
+            getline(cin,tempin,'\n');
+            if(tempin[0] == 'y')
+                remove_from_list(fileadd,comp,comMatch,numComponents);
+        }
+    }
+}
+
+void remove_from_list(string fileadd,component comp[],int comMatch, int &numComponents)
+{
+    string filePath = fileadd + "/data/storage/invetory.csv";
+    //fstream(myFile);
+    //myFile.open(filePath);
+
+    std::ofstream ofs(fileadd + "/data/storage/inventory.csv",std::ofstream::trunc);
+    for(int i=0; i<numComponents; i++)
+    {
+        if(i != comMatch)
+        {
+            ofs<<comp[i].name<<","<<comp[i].desc<<","
+               <<comp[i].area<<","<<(comp[i].val * 100)<<","
+               <<comp[i].qty<<",\n";
+        }
+    }
+    ofs.close();
+    numComponents--;
+    delete[] comp;
+    comp = new component[numComponents];
+    fill_component_list(filePath,comp,numComponents);
+    std::ofstream info(fileadd + "/data/storage/inv_info.dat",std::ofstream::trunc);
+    info<<numComponents<<",\nnum_of_components,";
+    info.close();
+    
 }
