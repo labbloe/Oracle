@@ -22,17 +22,17 @@ class component
         string area;
 
         //prints entire inventory list
-        void inventoryPrint(int curComponent);
+        void inventoryPrint();
 };
 
 //add components to inventory list
-void inventoryAdd(string filePath,int numComponents);
+void inventoryAdd(string fileadd,int &numComponents,component comp[]);
 
 //ensures correct user input for adding component to list
 bool addCheck(string input);
 
 //fills comp dynamic array with all components in inventory
-void fill_component_list(string filePath, component *comp);
+void fill_component_list(string filePath, component comp[],int numComponents);
 
 #include "data.hpp"
 #endif
