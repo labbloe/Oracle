@@ -3,4 +3,5 @@ Inventory Menu
 'print'		Displays inventory data
 'add'		Add component to inventory
 'remove'	Remove or decrement component quantity
+'edit'		Edit a specific value of an existing component
 

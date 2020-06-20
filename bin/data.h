@@ -31,6 +31,9 @@ void inventoryAdd(string fileadd,int &numComponents,component comp[]);
 //removes component qty from inventory list
 void inventoryRemove(string fileadd, int &numComponents, component comp[]);
 
+//edit a component value in inventory list
+void inventoryEdit(string fileadd,component comp[],int numComponents);
+
 //ensures correct user input for adding component to list
 bool addCheck(string input);
 

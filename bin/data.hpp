@@ -31,7 +31,7 @@ void inventory_com(string fileadd)
     {
         if(userInput == "print")
         {
-            cout<<setw(20)<<left<<"\nNAME"<<setw(49)<<left<<"DESCRIPTION"
+            cout<<setw(22)<<left<<"\nNAME"<<setw(49)<<left<<"DESCRIPTION"
                 <<setw(19)<<left<<"LOCATION"<<setw(8)<<left<<"VALUE"
                 <<setw(4)<<left<<"QTY"<<"\n";
             for(int j=0; j<101; j++)
@@ -56,9 +56,15 @@ void inventory_com(string fileadd)
         }
         else if (userInput == "remove")
         {
-          inventoryRemove(fileadd,numComponents,comp);
-          cout<<"Inventory:> ";
-          getline(cin,userInput,'\n');
+            inventoryRemove(fileadd,numComponents,comp);
+            cout<<"Inventory:> ";
+            getline(cin,userInput,'\n');
+        }
+        else if(userInput == "edit")
+        {
+            inventoryEdit(fileadd,comp,numComponents);
+            cout<<"Inventory:> ";
+            getline(cin,userInput,'\n');
         }
         
         else
@@ -73,7 +79,7 @@ void inventory_com(string fileadd)
 
 void component::inventoryPrint()
 {
-    cout<<setw(19)<<left<<name<<setw(49)<<left<<desc
+    cout<<setw(21)<<left<<name<<setw(49)<<left<<desc
         <<setw(19)<<left<<area<<"$"<<setw(7)<<left<<val
         <<setw(4)<<left<<qty;
 }
@@ -152,22 +158,26 @@ bool addCheck(string input)
 
 void fill_component_list(string filePath,component comp[],int numComponents)
 {
+                cout<<"test: "<<comp[0].name<<endl;
     string line;
     fstream(myFile);
     myFile.open(filePath);
+    cout<<"filePath: "<<filePath<<endl;
     cout<<std::fixed<<std::setprecision(2);
     for(int i=0; i < numComponents; i++)
     {
-        cout<<"i: "<<i<<endl;
         getline(myFile,line,',');
         comp[i].name = line;
         getline(myFile,line,',');
         comp[i].desc = line;
         getline(myFile,line,',');
+        cout<<"area: "<<line<<endl;
         comp[i].area = line;
         getline(myFile,line,',');
+        cout<<"line: "<<line<<endl;
         comp[i].val = (((float) stoi(line))/100);
         getline(myFile,line,',');
+        cout<<"HERE2"<<endl;
         comp[i].qty = stoi(line);
         getline(myFile,line,'\n');
     }
@@ -257,9 +267,6 @@ void inventoryRemove(string fileadd, int &numComponents, component comp[])
 void remove_from_list(string fileadd,component comp[],int comMatch, int &numComponents)
 {
     string filePath = fileadd + "/data/storage/invetory.csv";
-    //fstream(myFile);
-    //myFile.open(filePath);
-
     std::ofstream ofs(fileadd + "/data/storage/inventory.csv",std::ofstream::trunc);
     for(int i=0; i<numComponents; i++)
     {
@@ -274,9 +281,105 @@ void remove_from_list(string fileadd,component comp[],int comMatch, int &numComp
     numComponents--;
     delete[] comp;
     comp = new component[numComponents];
-    fill_component_list(filePath,comp,numComponents);
     std::ofstream info(fileadd + "/data/storage/inv_info.dat",std::ofstream::trunc);
     info<<numComponents<<",\nnum_of_components,";
     info.close();
+
+    fill_component_list(filePath,*&comp,numComponents);
     
+}
+
+void inventoryEdit(string fileadd,component comp[],int numComponents)
+{
+    cout<<"\n"
+        <<"Type 'exit' to leave menu\n"
+        <<"Format: name_of_component,\n\n"
+        <<"Inventory:search> ";
+    string input;
+    string comValue;
+    string comChange;
+    bool firstVal = false;
+    int comMatch;
+    getline(cin,input,'\n');
+
+    while(input != "exit")
+    {
+        if(searchCheck(input,comp,numComponents,comMatch) == false)
+        {
+            if(input == "exit")
+                return;
+            cout<<"\nError: Components '"<<input<<"' Not Found\n"
+                <<"Inventory:search> ";
+            getline(cin,input,'\n');
+        }
+        else
+        {
+            cout<<"\nFormat: value to edit,new value"
+                <<"\nPossible values(name,description,location,value,qty)"
+                <<"\nInventory:edit> ";
+            getline(cin,input,'\n');
+
+            while(1)
+            {
+                if(input == "exit")
+                    return;
+                firstVal = false;
+                for(int i=0; i<input.length(); i++)
+                {
+                    if(input[i] == ',')
+                    {
+                        i++;
+                        firstVal = true;
+                    }
+                    if(firstVal == false)
+                        comValue += input[i];
+                    else
+                        comChange += input[i];
+                }
+                if(comValue == "name")
+                {
+                    comp[comMatch].name = comChange;
+                    break;
+                }
+                else if(comValue == "description")
+                {
+                    comp[comMatch].desc = comChange;
+                    break;
+                }
+                else if(comValue == "location")
+                {
+                    comp[comMatch].area = comChange;
+                    break;
+                }
+                else if(comValue == "value")
+                {
+                    comp[comMatch].val = ((float)stoi(comChange)/100);
+                    break;
+                }
+                else if(comValue == "qty")
+                {
+                    comp[comMatch].qty = stoi(comChange);
+                    break;
+                }
+                else
+                {
+                    cout<<"\nError: Incorrect format\nInventory:edit> ";
+                    getline(cin,input,'\n');
+                }
+            }
+            std::ofstream ofs(fileadd + "/data/storage/inventory.csv",std::ofstream::trunc);
+            for(int i=0; i<numComponents; i++)
+            {
+                ofs<<comp[i].name<<","<<comp[i].desc<<","
+                   <<comp[i].area<<","<<(comp[i].val * 100)<<","
+                   <<comp[i].qty<<",\n";
+            }
+            ofs.close();
+            fill_component_list(fileadd + "data/storage/invetory.csv",comp,numComponents);
+            return;
+        }   
+
+
+    }
+    return;
 }
