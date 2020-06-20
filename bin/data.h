@@ -20,6 +20,7 @@ class component
         string name;
         string desc;
         string area;
+        string type;
 
         //prints entire inventory list
         void inventoryPrint();
@@ -33,6 +34,9 @@ void inventoryRemove(string fileadd, int &numComponents, component comp[]);
 
 //edit a component value in inventory list
 void inventoryEdit(string fileadd,component comp[],int numComponents);
+
+//search for a specific component or filter the print list
+void inventorySearch(string fileadd,component comp[],int numComponents);
 
 //ensures correct user input for adding component to list
 bool addCheck(string input);

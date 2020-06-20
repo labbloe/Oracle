@@ -31,10 +31,10 @@ void inventory_com(string fileadd)
     {
         if(userInput == "print")
         {
-            cout<<setw(22)<<left<<"\nNAME"<<setw(49)<<left<<"DESCRIPTION"
+            cout<<setw(22)<<left<<"\nNAME"<<setw(10)<<left<<"TYPE"<<setw(49)<<left<<"DESCRIPTION"
                 <<setw(19)<<left<<"LOCATION"<<setw(8)<<left<<"VALUE"
                 <<setw(4)<<left<<"QTY"<<"\n";
-            for(int j=0; j<101; j++)
+            for(int j=0; j<111; j++)
                 cout<<"=";
             cout<<'\n';
 
@@ -66,6 +66,12 @@ void inventory_com(string fileadd)
             cout<<"Inventory:> ";
             getline(cin,userInput,'\n');
         }
+        else if(userInput == "search")
+        {
+            inventorySearch(fileadd,comp,numComponents);
+            cout<<"Inventory:> ";
+            getline(cin,userInput,'\n');
+        }
         
         else
         {
@@ -79,7 +85,7 @@ void inventory_com(string fileadd)
 
 void component::inventoryPrint()
 {
-    cout<<setw(21)<<left<<name<<setw(49)<<left<<desc
+    cout<<setw(21)<<left<<name<<setw(10)<<left<<type<<setw(49)<<left<<desc
         <<setw(19)<<left<<area<<"$"<<setw(7)<<left<<val
         <<setw(4)<<left<<qty;
 }
@@ -87,7 +93,7 @@ void component::inventoryPrint()
 void inventoryAdd(string fileadd,int &numComponents,component comp[])
 {
     cout<<"Add new component(s) by using the following format\n"
-        <<"NAME,DESCRIPTION,LOCATION,VALUE,QTY,\n"
+        <<"NAME,TYPE,DESCRIPTION,LOCATION,VALUE,QTY,\n"
         <<"WRITE VALUE WITHOUT DECIMAL. EX: 0.10 -> 010\n"
         <<"Type 'exit' to leave.\n\nInventory:add> ";
 
@@ -109,6 +115,7 @@ void inventoryAdd(string fileadd,int &numComponents,component comp[])
             for(int i=0; i<numComponents; i++)
             {
                 myFile<<comp[i].name<<","
+                      <<comp[i].type<<","
                       <<comp[i].desc<<","
                       <<comp[i].area<<","
                       <<(comp[i].val*100)<<","
@@ -140,7 +147,7 @@ bool addCheck(string input)
         if(input[i] == ',')
             commaCnt++;
     }
-    if(commaCnt != 5)
+    if(commaCnt != 6)
     {
         cout<<"ERROR: Incorrect input format\n";
         cout<<"Inventory:add> ";
@@ -158,26 +165,23 @@ bool addCheck(string input)
 
 void fill_component_list(string filePath,component comp[],int numComponents)
 {
-                cout<<"test: "<<comp[0].name<<endl;
     string line;
     fstream(myFile);
     myFile.open(filePath);
-    cout<<"filePath: "<<filePath<<endl;
     cout<<std::fixed<<std::setprecision(2);
     for(int i=0; i < numComponents; i++)
     {
         getline(myFile,line,',');
         comp[i].name = line;
         getline(myFile,line,',');
+        comp[i].type = line;
+        getline(myFile,line,',');
         comp[i].desc = line;
         getline(myFile,line,',');
-        cout<<"area: "<<line<<endl;
         comp[i].area = line;
         getline(myFile,line,',');
-        cout<<"line: "<<line<<endl;
         comp[i].val = (((float) stoi(line))/100);
         getline(myFile,line,',');
-        cout<<"HERE2"<<endl;
         comp[i].qty = stoi(line);
         getline(myFile,line,'\n');
     }
@@ -315,7 +319,7 @@ void inventoryEdit(string fileadd,component comp[],int numComponents)
         else
         {
             cout<<"\nFormat: value to edit,new value"
-                <<"\nPossible values(name,description,location,value,qty)"
+                <<"\nPossible values(name,type,description,location,value,qty)"
                 <<"\nInventory:edit> ";
             getline(cin,input,'\n');
 
@@ -339,6 +343,11 @@ void inventoryEdit(string fileadd,component comp[],int numComponents)
                 if(comValue == "name")
                 {
                     comp[comMatch].name = comChange;
+                    break;
+                }
+                if(comValue == "type")
+                {
+                    comp[comMatch].type = comChange;
                     break;
                 }
                 else if(comValue == "description")
@@ -370,16 +379,42 @@ void inventoryEdit(string fileadd,component comp[],int numComponents)
             std::ofstream ofs(fileadd + "/data/storage/inventory.csv",std::ofstream::trunc);
             for(int i=0; i<numComponents; i++)
             {
-                ofs<<comp[i].name<<","<<comp[i].desc<<","
+                ofs<<comp[i].name<<","<<comp[i].type<<","<<comp[i].desc<<","
                    <<comp[i].area<<","<<(comp[i].val * 100)<<","
                    <<comp[i].qty<<",\n";
             }
             ofs.close();
-            fill_component_list(fileadd + "data/storage/invetory.csv",comp,numComponents);
+
+            string line;
+            fstream(myFile);
+            myFile.open(fileadd + "/data/storage/inventory.csv");       //issue with calling fill_component_inventory()
+            cout<<std::fixed<<std::setprecision(2);                     //this is a seperate slightly different verison
+            for(int i=0; i < numComponents; i++)                        //Try at some point to fix issue, for now this
+            {                                                           //works as expected.
+                getline(myFile,line,',');
+                comp[i].name = line;
+                getline(myFile,line,',');
+                comp[i].type = line;
+                getline(myFile,line,',');
+                comp[i].desc = line;
+                getline(myFile,line,',');
+                comp[i].area = line;
+                getline(myFile,line,',');
+                comp[i].val = (((float) stoi(line))/100);
+                getline(myFile,line,',');
+                comp[i].qty = stoi(line);
+                getline(myFile,line,'\n');
+            }
+            myFile.close();
             return;
         }   
 
 
     }
+    return;
+}
+
+void inventorySearch(string fileadd,component comp[],int numComponents)
+{
     return;
 }
