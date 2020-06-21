@@ -27,16 +27,16 @@ class component
 };
 
 //add components to inventory list
-void inventoryAdd(string fileadd,int &numComponents,component comp[]);
+void inventoryAdd(string fileadd,int &numComponents,component comp[],int &numTypes);
 
 //removes component qty from inventory list
-void inventoryRemove(string fileadd, int &numComponents, component comp[]);
+void inventoryRemove(string fileadd, int &numComponents, component comp[],int &numTypes);
 
 //edit a component value in inventory list
-void inventoryEdit(string fileadd,component comp[],int numComponents);
+void inventoryEdit(string fileadd,component comp[],int numComponents,int &numTypes);
 
 //search for a specific component or filter the print list
-void inventorySearch(string fileadd,component comp[],int numComponents);
+void inventorySearch(string fileadd,component comp[],int numComponents,int numTypes);
 
 //ensures correct user input for adding component to list
 bool addCheck(string input);
@@ -48,7 +48,10 @@ void fill_component_list(string filePath, component comp[],int numComponents);
 bool searchCheck(string input,component comp[],int numComponents,int &comMatch);
 
 //removes a singular component from the inventory list
-void remove_from_list(string fileadd,component comp[],int comMatch,int &numComponents);
+void remove_from_list(string fileadd,component comp[],int comMatch,int &numComponents,int &numTypes);
 
-#include "data.hpp"
+//prints header for invnetory list
+void printHeader();
+
+#include "inventory.hpp"
 #endif

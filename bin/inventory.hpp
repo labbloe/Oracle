@@ -8,8 +8,8 @@ void inventory_com(string fileadd)
 {
     //INITIALIZATIONS
     string userInput;
-    string filePath = fileadd + "/data/storage/inventory.csv";
-    printFile(fileadd + "/data/storage/invMsg.txt");
+    string filePath = fileadd + "/data/storage/inventory.dat";
+    printFile(fileadd + "/data/storage/invMsg.dat");
     cout<<"Inventory:> ";
     getline(cin,userInput,'\n');
 
@@ -18,8 +18,10 @@ void inventory_com(string fileadd)
     string line;
     myFile.open(fileadd + "/data/storage/inv_info.dat");
     getline(myFile,line,',');
-    myFile.close();
     int numComponents = stoi(line);
+    getline(myFile,line,',');
+    int numTypes = stoi(line);
+    myFile.close();
     component *comp = new component[numComponents];
 
     //STORE INVENTORY DATA INFO
@@ -31,12 +33,7 @@ void inventory_com(string fileadd)
     {
         if(userInput == "print")
         {
-            cout<<setw(22)<<left<<"\nNAME"<<setw(10)<<left<<"TYPE"<<setw(49)<<left<<"DESCRIPTION"
-                <<setw(19)<<left<<"LOCATION"<<setw(8)<<left<<"VALUE"
-                <<setw(4)<<left<<"QTY"<<"\n";
-            for(int j=0; j<111; j++)
-                cout<<"=";
-            cout<<'\n';
+            printHeader();
 
             //PRINT ENTIRE INVENTORY 
             for(int i=0; i<numComponents; i++)
@@ -50,25 +47,25 @@ void inventory_com(string fileadd)
         }
         else if (userInput == "add")
         {
-            inventoryAdd(fileadd,numComponents,comp);
+            inventoryAdd(fileadd,numComponents,comp,numTypes);
             cout<<"Inventory:> ";
             getline(cin,userInput,'\n');
         }
         else if (userInput == "remove")
         {
-            inventoryRemove(fileadd,numComponents,comp);
+            inventoryRemove(fileadd,numComponents,comp,numTypes);
             cout<<"Inventory:> ";
             getline(cin,userInput,'\n');
         }
         else if(userInput == "edit")
         {
-            inventoryEdit(fileadd,comp,numComponents);
+            inventoryEdit(fileadd,comp,numComponents,numTypes);
             cout<<"Inventory:> ";
             getline(cin,userInput,'\n');
         }
         else if(userInput == "search")
         {
-            inventorySearch(fileadd,comp,numComponents);
+            inventorySearch(fileadd,comp,numComponents,numTypes);
             cout<<"Inventory:> ";
             getline(cin,userInput,'\n');
         }
@@ -83,6 +80,16 @@ void inventory_com(string fileadd)
     delete[] comp;
 }
 
+void printHeader()
+{
+    cout<<setw(22)<<left<<"\nNAME"<<setw(10)<<left<<"TYPE"<<setw(49)<<left<<"DESCRIPTION"
+        <<setw(19)<<left<<"LOCATION"<<setw(8)<<left<<"VALUE"
+        <<setw(4)<<left<<"QTY"<<"\n";
+    for(int j=0; j<111; j++)
+        cout<<"=";
+    cout<<'\n';
+}
+
 void component::inventoryPrint()
 {
     cout<<setw(21)<<left<<name<<setw(10)<<left<<type<<setw(49)<<left<<desc
@@ -90,7 +97,7 @@ void component::inventoryPrint()
         <<setw(4)<<left<<qty;
 }
 
-void inventoryAdd(string fileadd,int &numComponents,component comp[])
+void inventoryAdd(string fileadd,int &numComponents,component comp[], int &numTypes)
 {
     cout<<"Add new component(s) by using the following format\n"
         <<"NAME,TYPE,DESCRIPTION,LOCATION,VALUE,QTY,\n"
@@ -111,7 +118,7 @@ void inventoryAdd(string fileadd,int &numComponents,component comp[])
         {
             string temp;
             fstream(myFile);
-            myFile.open(fileadd + "/data/storage/inventory.csv");
+            myFile.open(fileadd + "/data/storage/inventory.dat");
             for(int i=0; i<numComponents; i++)
             {
                 myFile<<comp[i].name<<","
@@ -127,11 +134,11 @@ void inventoryAdd(string fileadd,int &numComponents,component comp[])
             numComponents++;
             delete[] comp;
             comp = new component[numComponents];
-            fill_component_list(fileadd + "/data/storage/inventory.csv",comp,numComponents);
+            fill_component_list(fileadd + "/data/storage/inventory.dat",comp,numComponents);
             std::ofstream ofs(fileadd + "/data/storage/inv_info.dat",std::ofstream::trunc);
-            ofs<<numComponents<<",\nnum_of_components,";
+            ofs<<numComponents<<","<<numTypes<<",\n"<<"num_of_components,num_of_types,";
             ofs.close();
-
+            
         }
 
     }
@@ -217,7 +224,7 @@ bool searchCheck(string input,component comp[],int numComponents, int &comMatch)
     return false;
 }
 
-void inventoryRemove(string fileadd, int &numComponents, component comp[])
+void inventoryRemove(string fileadd, int &numComponents, component comp[],int &numTypes)
 {
     cout<<"\nType 'exit' to leave menu\n"
         <<"Use the following format: name_of_item,qty_to_remove\n"
@@ -263,20 +270,20 @@ void inventoryRemove(string fileadd, int &numComponents, component comp[])
             string tempin;
             getline(cin,tempin,'\n');
             if(tempin[0] == 'y')
-                remove_from_list(fileadd,comp,comMatch,numComponents);
+                remove_from_list(fileadd,comp,comMatch,numComponents,numTypes);
         }
     }
 }
 
-void remove_from_list(string fileadd,component comp[],int comMatch, int &numComponents)
+void remove_from_list(string fileadd,component comp[],int comMatch, int &numComponents,int &numTypes)
 {
-    string filePath = fileadd + "/data/storage/invetory.csv";
-    std::ofstream ofs(fileadd + "/data/storage/inventory.csv",std::ofstream::trunc);
+    string filePath = fileadd + "/data/storage/inventory.dat";
+    std::ofstream ofs(fileadd + "/data/storage/inventory.dat",std::ofstream::trunc);
     for(int i=0; i<numComponents; i++)
     {
         if(i != comMatch)
         {
-            ofs<<comp[i].name<<","<<comp[i].desc<<","
+            ofs<<comp[i].name<<","<<comp[i].type<<","<<comp[i].desc<<","
                <<comp[i].area<<","<<(comp[i].val * 100)<<","
                <<comp[i].qty<<",\n";
         }
@@ -286,18 +293,18 @@ void remove_from_list(string fileadd,component comp[],int comMatch, int &numComp
     delete[] comp;
     comp = new component[numComponents];
     std::ofstream info(fileadd + "/data/storage/inv_info.dat",std::ofstream::trunc);
-    info<<numComponents<<",\nnum_of_components,";
+    info<<numComponents<<","<<numTypes<<",\n"<<"num_of_components,num_of_types,";
     info.close();
 
     fill_component_list(filePath,*&comp,numComponents);
     
 }
 
-void inventoryEdit(string fileadd,component comp[],int numComponents)
+void inventoryEdit(string fileadd,component comp[],int numComponents,int &numTypes)
 {
     cout<<"\n"
         <<"Type 'exit' to leave menu\n"
-        <<"Format: name_of_component,\n\n"
+        <<"Format: name_of_component\n\n"
         <<"Inventory:search> ";
     string input;
     string comValue;
@@ -305,6 +312,7 @@ void inventoryEdit(string fileadd,component comp[],int numComponents)
     bool firstVal = false;
     int comMatch;
     getline(cin,input,'\n');
+    input += ',';
 
     while(input != "exit")
     {
@@ -315,6 +323,7 @@ void inventoryEdit(string fileadd,component comp[],int numComponents)
             cout<<"\nError: Components '"<<input<<"' Not Found\n"
                 <<"Inventory:search> ";
             getline(cin,input,'\n');
+            input += ',';
         }
         else
         {
@@ -376,7 +385,7 @@ void inventoryEdit(string fileadd,component comp[],int numComponents)
                     getline(cin,input,'\n');
                 }
             }
-            std::ofstream ofs(fileadd + "/data/storage/inventory.csv",std::ofstream::trunc);
+            std::ofstream ofs(fileadd + "/data/storage/inventory.dat",std::ofstream::trunc);
             for(int i=0; i<numComponents; i++)
             {
                 ofs<<comp[i].name<<","<<comp[i].type<<","<<comp[i].desc<<","
@@ -387,7 +396,7 @@ void inventoryEdit(string fileadd,component comp[],int numComponents)
 
             string line;
             fstream(myFile);
-            myFile.open(fileadd + "/data/storage/inventory.csv");       //issue with calling fill_component_inventory()
+            myFile.open(fileadd + "/data/storage/inventory.dat");       //issue with calling fill_component_inventory()
             cout<<std::fixed<<std::setprecision(2);                     //this is a seperate slightly different verison
             for(int i=0; i < numComponents; i++)                        //Try at some point to fix issue, for now this
             {                                                           //works as expected.
@@ -414,7 +423,97 @@ void inventoryEdit(string fileadd,component comp[],int numComponents)
     return;
 }
 
-void inventorySearch(string fileadd,component comp[],int numComponents)
+void inventorySearch(string fileadd,component comp[],int numComponents,int numTypes)
 {
+    cout<<"==============================================================================\n"
+        <<"Filter Inventory by the Following Search Criteria 'type','location', or 'name'\n"
+        <<"Type 'exit' to Leave Search Menu\n"
+        <<"FORMAT: SEARCH_CRITERIA,SEARCH_VALUE\n"
+        <<"==============================================================================\n\n"
+        <<"Component Types: ";
+        fstream(myFile);
+        myFile.open(fileadd + "/data/storage/typeLog.dat");
+        string type;
+        for(int i=0; i<numTypes; i++)
+        {
+            getline(myFile,type,'\n');
+            cout<<type<<"  ";
+            if((i%6 == 0)&&(i != 0))
+                cout<<setw(18)<<left<<"\n";
+        }
+        cout<<"\nInventory:search> ";
+    
+    string input;
+
+    while(1)
+    {
+        string searchCriteria;
+        string searchValue;
+        bool secVal = false;
+        getline(cin,input,'\n');
+        if(input == "exit")
+            return;
+        
+        for(int i=0; i<input.length(); i++)
+        {
+            if(input[i] == ',')
+            {
+                i++;
+                secVal = true;
+            }
+            if(secVal == false)
+                searchCriteria += input[i];
+            else
+                searchValue += input[i];
+        }
+        cout<<"criteria: "<<searchCriteria<<" val: "<<searchValue<<endl;
+        if(searchCriteria == "type")
+        {
+            printHeader();
+            for(int i=0; i<numComponents; i++)
+            {
+                if(comp[i].type == searchValue)
+                {
+                    comp[i].inventoryPrint();
+                    cout<<"\n";
+                }
+            }
+        }
+        else if(searchCriteria == "location")
+        {
+            printHeader();
+            for(int i=0; i<numComponents; i++)
+            {
+                if(comp[i].area == searchValue)
+                {
+                    comp[i].inventoryPrint();
+                    cout<<"\n";
+                }
+            }
+        }
+        else if(searchCriteria == "name")
+        {   
+            printHeader();
+            for(int i=0; i<numComponents; i++)
+            {
+                int matchCnt = 0;
+                for(int j=0; j<searchValue.length(); j++)
+                {
+                    if(comp[i].name[j] == searchValue[j])
+                        matchCnt++;
+                }
+                if(matchCnt == searchValue.length())
+                {
+                    comp[i].inventoryPrint();
+                    cout<<"\n";
+                }
+            }
+        }
+        else
+            cout<<"ERROR: Incorrect Input Format\n";
+
+        cout<<"Inventory:search> ";
+    }
+
     return;
 }
