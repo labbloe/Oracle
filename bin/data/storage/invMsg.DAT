@@ -5,4 +5,5 @@ Inventory Menu
 'remove'	Remove or decrement component quantity
 'edit'		Edit a specific value of an existing component
 'search'	Filter components by specific categories
+'export'	Exports entire inventory list to Desktop in a .csv format
 

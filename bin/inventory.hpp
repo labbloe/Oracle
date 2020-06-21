@@ -69,6 +69,24 @@ void inventory_com(string fileadd)
             cout<<"Inventory:> ";
             getline(cin,userInput,'\n');
         }
+        else if(userInput == "export")
+        {
+            int BufferSize = 32767;
+            DWORD bufCharCount = BufferSize;
+            TCHAR infoBufNm[BufferSize];
+            GetUserName(infoBufNm,&bufCharCount);
+            string temp = infoBufNm;
+            std::ofstream inv("C:/Users/"+temp+"/Desktop/inventory.csv");
+            for(int i=0; i<numComponents; i++)
+            {
+                inv<<comp[i].name<<","<<comp[i].type<<","
+                   <<comp[i].desc<<","<<comp[i].area<<","
+                   <<comp[i].val<<","<<comp[i].qty<<"\n";
+            }
+            inv.close();
+            cout<<"Inventory:> ";
+            getline(cin,userInput,'\n');
+        }
         
         else
         {
@@ -102,6 +120,7 @@ void inventoryAdd(string fileadd,int &numComponents,component comp[], int &numTy
     cout<<"Add new component(s) by using the following format\n"
         <<"NAME,TYPE,DESCRIPTION,LOCATION,VALUE,QTY,\n"
         <<"WRITE VALUE WITHOUT DECIMAL. EX: 0.10 -> 010\n"
+        <<"Type 'print' to create an Excel accessible .csv spreadsheet to the desktop\n"
         <<"Type 'exit' to leave.\n\nInventory:add> ";
 
     string input;
@@ -138,11 +157,8 @@ void inventoryAdd(string fileadd,int &numComponents,component comp[], int &numTy
             std::ofstream ofs(fileadd + "/data/storage/inv_info.dat",std::ofstream::trunc);
             ofs<<numComponents<<","<<numTypes<<",\n"<<"num_of_components,num_of_types,";
             ofs.close();
-            
         }
-
     }
-
     cout<<"\n";
 }
 
