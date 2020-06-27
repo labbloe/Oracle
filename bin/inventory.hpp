@@ -194,7 +194,7 @@ void fill_component_list(string filePath,component comp[],int numComponents)
     cout<<std::fixed<<std::setprecision(2);
     for(int i=0; i < numComponents; i++)
     {
-        getline(myFile,line,',');
+        getline(myFile,line,','); 
         comp[i].name = line;
         getline(myFile,line,',');
         comp[i].type = line;

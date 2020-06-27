@@ -1,5 +1,6 @@
 resistor
 capacitor
+transistor
 LED
 IC
 diode
@@ -7,4 +8,8 @@ buzzer
 button
 regulator
 ESP
+wire
+adapter
+sensor
+micro
 other
