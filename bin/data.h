@@ -50,8 +50,11 @@ bool searchCheck(string input,component comp[],int numComponents,int &comMatch);
 //removes a singular component from the inventory list
 void remove_from_list(string fileadd,component comp[],int comMatch,int &numComponents,int &numTypes);
 
-//prints header for invnetory list
+//prints header for inventory list
 void printHeader();
+
+//print footer for inventory list
+void printFooter(int numComponents,float value);
 
 #include "inventory.hpp"
 #endif

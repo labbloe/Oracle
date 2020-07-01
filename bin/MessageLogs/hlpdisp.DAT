@@ -1,4 +1,5 @@
 
+...............................................................
 All Available Oracle Commands
 
 help		Lists all available commands in current version
@@ -10,3 +11,4 @@ clear		clears the console window
 run		Runs a specified program
 server		Opens Remote Server Menu
 inventory	Modify component inventory data
+...............................................................

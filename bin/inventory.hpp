@@ -34,13 +34,15 @@ void inventory_com(string fileadd)
         if(userInput == "print")
         {
             printHeader();
-
+            float value = 0;
             //PRINT ENTIRE INVENTORY 
             for(int i=0; i<numComponents; i++)
             {
                 comp[i].inventoryPrint();
+                value += (comp[i].qty * comp[i].val);
                 cout<<'\n';
             }
+            printFooter(numComponents,value);
             cout<<endl;
             cout<<"Inventory:> ";
             getline(cin,userInput,'\n');
@@ -106,6 +108,19 @@ void printHeader()
     for(int j=0; j<111; j++)
         cout<<"=";
     cout<<'\n';
+}
+
+void printFooter(int numComponents,float value)
+{
+    for(int i=0; i<111; i++)
+        cout<<".";
+
+    cout<<"\nNumber of Components: "<<numComponents
+        <<"   Inventory Value: $"<<value<<"\n";
+
+    for(int i=0; i<111; i++)
+        cout<<".";
+    cout<<"\n";
 }
 
 void component::inventoryPrint()
@@ -412,7 +427,7 @@ void inventoryEdit(string fileadd,component comp[],int numComponents,int &numTyp
 
             string line;
             fstream(myFile);
-            myFile.open(fileadd + "/data/storage/inventory.dat");       //issue with calling fill_component_inventory()
+            myFile.open(fileadd + "/data/storage/inventory.dat");       //issue with calling fill_component_list()
             cout<<std::fixed<<std::setprecision(2);                     //this is a seperate slightly different verison
             for(int i=0; i < numComponents; i++)                        //Try at some point to fix issue, for now this
             {                                                           //works as expected.
@@ -486,29 +501,43 @@ void inventorySearch(string fileadd,component comp[],int numComponents,int numTy
         if(searchCriteria == "type")
         {
             printHeader();
+            int matchCnt = 0;
+            float value = 0;
             for(int i=0; i<numComponents; i++)
             {
                 if(comp[i].type == searchValue)
                 {
                     comp[i].inventoryPrint();
+                    matchCnt++;
+                    value += (comp[i].qty * comp[i].val);
                     cout<<"\n";
                 }
             }
+            printFooter(matchCnt,value);
+            cout<<"\n";
         }
         else if(searchCriteria == "location")
         {
             printHeader();
+            int matchCnt = 0;
+            float value = 0;
             for(int i=0; i<numComponents; i++)
             {
                 if(comp[i].area == searchValue)
                 {
                     comp[i].inventoryPrint();
+                    matchCnt++;
+                    value += (comp[i].qty * comp[i].val);
                     cout<<"\n";
                 }
             }
+            printFooter(matchCnt,value);
+            cout<<"\n";
         }
         else if(searchCriteria == "name")
         {   
+            float value = 0;
+            int cnt = 0;
             printHeader();
             for(int i=0; i<numComponents; i++)
             {
@@ -516,14 +545,20 @@ void inventorySearch(string fileadd,component comp[],int numComponents,int numTy
                 for(int j=0; j<searchValue.length(); j++)
                 {
                     if(comp[i].name[j] == searchValue[j])
+                    {
                         matchCnt++;
+                        value += (comp[i].qty * comp[i].val);
+                    }
                 }
                 if(matchCnt == searchValue.length())
                 {
                     comp[i].inventoryPrint();
+                    cnt++;
                     cout<<"\n";
                 }
             }
+            printFooter(cnt,value);
+            cout<<"\n";
         }
         else
             cout<<"ERROR: Incorrect Input Format\n";

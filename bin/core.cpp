@@ -10,7 +10,7 @@ int main()
     string UserInput;
     string exit;
     int commandCnt = 1;
-    printFile("../bin/MessageLogs/startingMessage.txt");
+    printFile("../bin/MessageLogs/StrtMsg.dat");
     UserGreeting();
     while(UserInput != "exit")
     {
