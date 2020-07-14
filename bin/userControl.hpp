@@ -88,6 +88,29 @@ void run_com(string fileadd)
         ShellExecute(NULL,"open","C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe",NULL,"C:",SW_SHOWNORMAL);
     if(input == "chrome")
         ShellExecute(NULL,"open","C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe",NULL,"C:",SW_SHOWNORMAL);
+    if(input == "Minecraft World Render")
+    {
+        string worldPath;
+        string renderPath;
+        string overviewInput;
+        string cmdInput;
+        cout<<"\nMinecraft world render using overview software.\n"
+            <<"World path should go to the folder that contains the level.dat file.\n"
+            <<"Render path should lead to a space to create a new folder.\n"
+            <<"Note: Rendering creates its own folder, but requires folder specified in path.\n"
+            <<"      Be sure to include folder name at end of path. i.e. user/desktop/render\n\n";
+        cout<<"Enter world path: ";
+        getline(cin,input);
+        worldPath = "\"" + input + "\"";
+        cout<<"\nRender Path: ";
+        getline(cin,input);
+        renderPath = "\"" + input + "\"";
+        cout<<"\nStarting render process.\n";
+        overviewInput = worldPath + " " + renderPath;
+        cmdInput = "a: && cd A:/Programs/overviewer-0.15.84 && overviewer.exe " + overviewInput;
+        system(cmdInput.c_str());
+
+    }
 }
 
 void server_com()
