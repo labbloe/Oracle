@@ -1,4 +1,5 @@
 
 bin/cmdLogs/*.txt
 bin/data/storage/inventory.dat
-bin/ESPclient/STASSID.dat
+bin/ESPclient/ESPclientTemplate/STASSID.dat
+bin/MessageLogs/test.txt

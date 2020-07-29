@@ -44,6 +44,9 @@ bool addCheck(string input);
 //fills comp dynamic array with all components in inventory
 void fill_component_list(string filePath, component comp[],int numComponents);
 
+//fills inventory data file
+void fill_inventory_file(string fileadd, component comp[],int numComponents);
+
 //checks inventory list against a given "input" for a match
 bool searchCheck(string input,component comp[],int numComponents,int &comMatch);
 

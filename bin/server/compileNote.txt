@@ -1,0 +1,1 @@
+affix -lws2_32 library when compiling server file

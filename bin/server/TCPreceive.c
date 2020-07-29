@@ -1,4 +1,9 @@
+/*
+  Winsock server code template from Microsoft
+  https://docs.microsoft.com/en-us/windows/win32/winsock/complete-server-code
 
+  TCP server listens for commands from ESP client, commands are split between the device name and command received.
+*/
 
 #define WIN32_LEAN_AND_MEAN
 #include "OracleTCP.hpp"
@@ -8,12 +13,10 @@
 #define DEFAULT_PROTO SOCK_STREAM
 void Usage(char *progname);
 bool bufferCheck(char* temp,char* buf);
-void serverOracle(char* buf);
-
+void serverSend_CLA(char* buf);
 
 void Usage(char *progname)
 {
-
     fprintf(stderr,"Usage: %s -p [protocol] -e [port_num] -i [ip_address]\n", progname);
     fprintf(stderr,"Where:\n\t- protocol is one of TCP or UDP\n");
     fprintf(stderr,"\t- port_num is the port to listen on\n");
@@ -23,14 +26,11 @@ void Usage(char *progname)
     fprintf(stderr,"\t- The defaults are TCP, 2007 and INADDR_ANY.\n");
     WSACleanup();
     exit(1);
-
 }
 
- 
-
 int main(int argc, char **argv)
-
 {
+    cout<<"Oracle Server Status:\n\n";
     char Buffer[BufferSize];
     char temp_Buffer[BufferSize];
     char *ip_address= NULL;
@@ -83,12 +83,8 @@ int main(int argc, char **argv)
             }
             else
                 Usage(argv[0]);
-
         }
-
     }
-
- 
 
     // Request Winsock version 2.2
     if ((retval = WSAStartup(0x202, &wsaData)) != 0)
@@ -102,11 +98,7 @@ int main(int argc, char **argv)
        printf("Server: WSAStartup() is OK.\n");
 
     if (port == 0)
-       {
         Usage(argv[0]);
-    }
-
- 
 
     local.sin_family = AF_INET;
     local.sin_addr.s_addr = (!ip_address) ? INADDR_ANY:inet_addr("162.72.85.132");
@@ -115,8 +107,6 @@ int main(int argc, char **argv)
 
     // TCP socket
     listen_socket = socket(AF_INET, socket_type,0);
-
-    cout<<"TEST: "<<inet_addr("162.72.85.132");
 
     if (listen_socket == INVALID_SOCKET){
         fprintf(stderr,"Server: socket() failed with error %d\n", WSAGetLastError());
@@ -130,27 +120,23 @@ int main(int argc, char **argv)
  
 
     // bind() associates a local address and port combination with the socket just created.
-
     // This is most useful when the application is a
-
     // server that has a well-known port that clients know about in advance.
     
     if (bind(listen_socket, (struct sockaddr*)&local, sizeof(local)) == SOCKET_ERROR)
-       {
+    {
         fprintf(stderr,"Server: bind() failed with error %d\n", WSAGetLastError());
         WSACleanup();
         return -1;
     }
 
     else
-              printf("Server: bind() is OK.\n");
+        printf("Server: bind() is OK.\n");
 
  
 
      // So far, everything we did was applicable to TCP as well as UDP.
-
      // However, there are certain steps that do not work when the server is
-
      // using UDP. We cannot listen() on a UDP socket.
 
     if (socket_type != SOCK_DGRAM)
@@ -161,11 +147,9 @@ int main(int argc, char **argv)
             WSACleanup();
             return -1;
         }
-
        else
             printf("Server: listen() is OK.\n");
-
-    }
+        }
 
     printf("Server: %s: I'm listening and waiting connection\non port %d, protocol %s\n", argv[0], port, (socket_type == SOCK_STREAM)?"TCP":"UDP");
 
@@ -262,7 +246,6 @@ int main(int argc, char **argv)
         continue;
     }
        return 0;
-
 }
 
 bool bufferCheck(char* temp, char* buf)
@@ -278,14 +261,14 @@ bool bufferCheck(char* temp, char* buf)
         {
             if(temp2 == "exit")
                 return true;
-            serverOracle(buf);
+            serverSend_CLA(buf);
             return false;
         }
     }
     return false;
 }
 
-void serverOracle(char* buf)
+void serverSend_CLA(char* buf)
 {
     string input(buf);
     InputSelection("../",input);

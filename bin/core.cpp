@@ -1,6 +1,6 @@
 /*
     core.cpp is the main for all Oracle related operations.
-    version 0.0.1
+    version 0.0.4
 */
 
 #include "CoreRegistry.h"

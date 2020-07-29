@@ -19,8 +19,8 @@ using std::cin;
 using std::endl;
 using std::fstream;
 
-const string version = "0.0.3";
-const string versionDate = "June 30, 2020";
+const string version = "0.0.4";
+const string versionDate = "July 14, 2020";
 
 #include "Messages.hpp"
 #include "status.hpp"

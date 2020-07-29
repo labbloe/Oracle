@@ -1,6 +1,6 @@
 /*
-Contains data handling functions regarding the user
-and component inventory.
+Contains data handling functions regarding the
+component inventory.
 */
 
 
@@ -226,6 +226,20 @@ void fill_component_list(string filePath,component comp[],int numComponents)
     myFile.close();
 }
 
+void fill_inventory_file(string fileadd, component comp[],int numComponents)
+{
+    string filePath = fileadd + "/data/storage/inventory.dat";
+    std::ofstream ofs(fileadd + "/data/storage/inventory.dat",std::ofstream::trunc);
+    for(int i=0; i<numComponents; i++)
+    {
+        ofs<<comp[i].name<<","<<comp[i].type<<","<<comp[i].desc<<","
+            <<comp[i].area<<","<<(comp[i].val * 100)<<","
+            <<comp[i].qty<<",\n";
+
+    }
+    ofs.close();
+}
+
 bool searchCheck(string input,component comp[],int numComponents, int &comMatch)
 {
     int inLength = input.length();
@@ -294,6 +308,7 @@ void inventoryRemove(string fileadd, int &numComponents, component comp[],int &n
     if((match == true)&&(input != "exit"))
     {
         comp[comMatch].qty -= stoi(tmpQty);
+        fill_inventory_file(fileadd,comp,numComponents);
         if(comp[comMatch].qty <= 0)
         {
             cout<<"\nThis component has a QTY of Zero. Would\n"
