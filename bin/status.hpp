@@ -17,6 +17,43 @@ class ipinfo
     void ipInfoFiller(string sectionName, string fileadd);
 };
 
+void startup()
+{
+    string userFirstName;
+    string userLastName;
+    string userEmail;
+    string userPhone;
+    fstream(userFile);
+    userFile.open("../bin/data/user/info.DAT");
+    if(userFile.is_open())
+    {
+        getline(userFile,userFirstName,',');
+        getline(userFile,userLastName,',');
+        getline(userFile,userEmail,',');
+        getline(userFile,userPhone,',');
+    }
+    else
+    {
+        userFile.close();
+        std::ofstream userFile("../bin/data/user/info.DAT");
+        cout << "User Registration\n\nFirst Name: ";
+        cin >> userFirstName;
+        cout << "Last Name: ";
+        cin >> userLastName;
+        cout << "Email (optional): ";
+        cin >> userEmail;
+        cout << "Phone Number (optional, no dashes): ";
+        cin >> userPhone;
+        cout <<"\n\n Thank you for providing your user information\nWelcome to Oracle\n\nGenerating necessary startup files...\n\n";
+
+        userFile << userFirstName + "," + userLastName + "," + userEmail + "," + userPhone;
+        userFile.close();
+        std::ofstream inv("../bin/data/storage/inventory.DAT");
+        inv << "10,resistor,THT Resistor,SMALL_BIN_A,10,10,";
+    }
+    
+}
+
 void integratedModuleReport(string fileadd)
 {
     ipinfo ethernet;

@@ -6,6 +6,7 @@
 
 int main()
 {
+    startup();
     string UserInput;
     string exit;
     int commandCnt = 1;
