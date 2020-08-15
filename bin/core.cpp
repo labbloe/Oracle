@@ -1,6 +1,5 @@
 /*
     core.cpp is the main for all Oracle related operations.
-    version 0.0.4
 */
 
 #include "CoreRegistry.h"
@@ -10,8 +9,8 @@ int main()
     string UserInput;
     string exit;
     int commandCnt = 1;
-    printFile("../bin/MessageLogs/StrtMsg.dat");
-    UserGreeting();
+    printFile("../bin/MessageLogs/StrtMsg.DAT");
+    //UserGreeting();
     while(UserInput != "exit")
     {
         exit = "temp";

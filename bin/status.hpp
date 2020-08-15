@@ -29,15 +29,15 @@ void integratedModuleReport(string fileadd)
 
     cout<<"VERSION..............."<<version<<endl;
 
-    int BufferSize = 32767;
-    TCHAR infoBuf[BufferSize];
-    DWORD bufCharCount = BufferSize;
-    GetComputerName(infoBuf,&bufCharCount);
-    cout<<"COMPUTER ID..........."<<infoBuf<<endl;
+    //int BufferSize = 32767;
+    //TCHAR infoBuf[BufferSize];
+    //DWORD bufCharCount = BufferSize;
+    //GetComputerName(infoBuf,&bufCharCount);
+    //cout<<"COMPUTER ID..........."<<infoBuf<<endl;
 
-    TCHAR infoBufNm[BufferSize];
-    GetUserName(infoBufNm,&bufCharCount);
-    cout<<"USER ID..............."<<infoBufNm<<endl;
+    //TCHAR infoBufNm[BufferSize];
+    //GetUserName(infoBufNm,&bufCharCount);
+    //cout<<"USER ID..............."<<infoBufNm<<endl;
 
     ethernet.ipInfoFiller("Ethernet adapter Ethernet:",fileadd);
     cout<<"Ethernet NetName......"<<ethernet.netName<<endl;

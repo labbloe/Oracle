@@ -6,6 +6,7 @@ user
 
 #include "CoreRegistry.h"
 
+using std::ios;
 
 void printFile(string filePath)
 {
@@ -21,7 +22,7 @@ void printFile(string filePath)
     else cout<< "Unable to open file: "<<filePath<<endl;
 }
 
-void UserGreeting()
+/*void UserGreeting()
 {
     int BufferSize = 32767;
     TCHAR infoBuf[BufferSize];
@@ -29,4 +30,4 @@ void UserGreeting()
     TCHAR infoBufNm[BufferSize];
     GetUserName(infoBufNm,&bufCharCount);
     cout<<"Welcome "<<infoBufNm<<endl<<endl;
-}
+}*/

@@ -7,9 +7,6 @@ for core.cpp.
 #define COREREGISTRY_H
 
 #include <iostream>
-#include <Windows.h>
-#include <winbase.h>
-#include <ShellApi.h>
 #include <string>
 #include <fstream>
 
@@ -19,8 +16,8 @@ using std::cin;
 using std::endl;
 using std::fstream;
 
-const string version = "0.0.4";
-const string versionDate = "July 14, 2020";
+const string version = "0.0.5";
+const string versionDate = "August, 15 2020";
 
 #include "Messages.hpp"
 #include "status.hpp"

@@ -8,15 +8,15 @@ void inventory_com(string fileadd)
 {
     //INITIALIZATIONS
     string userInput;
-    string filePath = fileadd + "/data/storage/inventory.dat";
-    printFile(fileadd + "/data/storage/invMsg.dat");
+    string filePath = fileadd + "/data/storage/inventory.DAT";
+    printFile(fileadd + "/data/storage/invMsg.DAT");
     cout<<"Inventory:> ";
     getline(cin,userInput,'\n');
 
     //GET INVENTORY DATA INFO
     fstream(myFile);
     string line;
-    myFile.open(fileadd + "/data/storage/inv_info.dat");
+    myFile.open(fileadd + "/data/storage/inv_info.DAT");
     getline(myFile,line,',');
     int numComponents = stoi(line);
     getline(myFile,line,',');
@@ -73,12 +73,12 @@ void inventory_com(string fileadd)
         }
         else if(userInput == "export")
         {
-            int BufferSize = 32767;
-            DWORD bufCharCount = BufferSize;
-            TCHAR infoBufNm[BufferSize];
-            GetUserName(infoBufNm,&bufCharCount);
-            string temp = infoBufNm;
-            std::ofstream inv("C:/Users/"+temp+"/Desktop/inventory.csv");
+            //int BufferSize = 32767;
+            //DWORD bufCharCount = BufferSize;
+            //TCHAR infoBufNm[BufferSize];
+            //GetUserName(infoBufNm,&bufCharCount);
+            //string temp = infoBufNm;
+            std::ofstream inv("home/desktop");
             for(int i=0; i<numComponents; i++)
             {
                 inv<<comp[i].name<<","<<comp[i].type<<","
@@ -152,7 +152,7 @@ void inventoryAdd(string fileadd,int &numComponents,component comp[], int &numTy
         {
             string temp;
             fstream(myFile);
-            myFile.open(fileadd + "/data/storage/inventory.dat");
+            myFile.open(fileadd + "/data/storage/inventory.DAT");
             for(int i=0; i<numComponents; i++)
             {
                 myFile<<comp[i].name<<","
@@ -168,8 +168,8 @@ void inventoryAdd(string fileadd,int &numComponents,component comp[], int &numTy
             numComponents++;
             delete[] comp;
             comp = new component[numComponents];
-            fill_component_list(fileadd + "/data/storage/inventory.dat",comp,numComponents);
-            std::ofstream ofs(fileadd + "/data/storage/inv_info.dat",std::ofstream::trunc);
+            fill_component_list(fileadd + "/data/storage/inventory.DAT",comp,numComponents);
+            std::ofstream ofs(fileadd + "/data/storage/inv_info.DAT",std::ofstream::trunc);
             ofs<<numComponents<<","<<numTypes<<",\n"<<"num_of_components,num_of_types,";
             ofs.close();
         }
@@ -228,8 +228,8 @@ void fill_component_list(string filePath,component comp[],int numComponents)
 
 void fill_inventory_file(string fileadd, component comp[],int numComponents)
 {
-    string filePath = fileadd + "/data/storage/inventory.dat";
-    std::ofstream ofs(fileadd + "/data/storage/inventory.dat",std::ofstream::trunc);
+    string filePath = fileadd + "/data/storage/inventory.DAT";
+    std::ofstream ofs(fileadd + "/data/storage/inventory.DAT",std::ofstream::trunc);
     for(int i=0; i<numComponents; i++)
     {
         ofs<<comp[i].name<<","<<comp[i].type<<","<<comp[i].desc<<","
@@ -323,8 +323,8 @@ void inventoryRemove(string fileadd, int &numComponents, component comp[],int &n
 
 void remove_from_list(string fileadd,component comp[],int comMatch, int &numComponents,int &numTypes)
 {
-    string filePath = fileadd + "/data/storage/inventory.dat";
-    std::ofstream ofs(fileadd + "/data/storage/inventory.dat",std::ofstream::trunc);
+    string filePath = fileadd + "/data/storage/inventory.DAT";
+    std::ofstream ofs(fileadd + "/data/storage/inventory.DAT",std::ofstream::trunc);
     for(int i=0; i<numComponents; i++)
     {
         if(i != comMatch)
@@ -338,7 +338,7 @@ void remove_from_list(string fileadd,component comp[],int comMatch, int &numComp
     numComponents--;
     delete[] comp;
     comp = new component[numComponents];
-    std::ofstream info(fileadd + "/data/storage/inv_info.dat",std::ofstream::trunc);
+    std::ofstream info(fileadd + "/data/storage/inv_info.DAT",std::ofstream::trunc);
     info<<numComponents<<","<<numTypes<<",\n"<<"num_of_components,num_of_types,";
     info.close();
 
@@ -431,7 +431,7 @@ void inventoryEdit(string fileadd,component comp[],int numComponents,int &numTyp
                     getline(cin,input,'\n');
                 }
             }
-            std::ofstream ofs(fileadd + "/data/storage/inventory.dat",std::ofstream::trunc);
+            std::ofstream ofs(fileadd + "/data/storage/inventory.DAT",std::ofstream::trunc);
             for(int i=0; i<numComponents; i++)
             {
                 ofs<<comp[i].name<<","<<comp[i].type<<","<<comp[i].desc<<","
@@ -442,7 +442,7 @@ void inventoryEdit(string fileadd,component comp[],int numComponents,int &numTyp
 
             string line;
             fstream(myFile);
-            myFile.open(fileadd + "/data/storage/inventory.dat");       //issue with calling fill_component_list()
+            myFile.open(fileadd + "/data/storage/inventory.DAT");       //issue with calling fill_component_list()
             cout<<std::fixed<<std::setprecision(2);                     //this is a seperate slightly different verison
             for(int i=0; i < numComponents; i++)                        //Try at some point to fix issue, for now this
             {                                                           //works as expected.
@@ -478,7 +478,7 @@ void inventorySearch(string fileadd,component comp[],int numComponents,int numTy
         <<"==============================================================================\n\n"
         <<"Component Types: ";
         fstream(myFile);
-        myFile.open(fileadd + "/data/storage/typeLog.dat");
+        myFile.open(fileadd + "/data/storage/typeLog.DAT");
         string type;
         for(int i=0; i<numTypes; i++)
         {

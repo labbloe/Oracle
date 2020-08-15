@@ -33,7 +33,7 @@ string readCommand(string filePath,string userInput)
 void InputSelection(string fileadd, string input)
 {
     string match;
-    match = readCommand(fileadd + "MessageLogs/comRef.dat",input);
+    match = readCommand(fileadd + "MessageLogs/comRef.DAT",input);
     if(match != "none")
     {
         if(match == "help")
@@ -56,15 +56,15 @@ void InputSelection(string fileadd, string input)
 
 }
 
-void help_com(string fileadd) {printFile(fileadd + "MessageLogs/hlpdisp.dat");cout<<endl;}
+void help_com(string fileadd) {printFile(fileadd + "MessageLogs/hlpdisp.DAT");cout<<endl;}
 
 void status_com(string fileadd) {integratedModuleReport(fileadd);}
 
-void warranty_com(string fileadd) {printFile(fileadd + "MessageLogs/warranty.dat");cout<<endl;}
+void warranty_com(string fileadd) {printFile(fileadd + "MessageLogs/warranty.DAT");cout<<endl;}
 
 void version_com() {cout<<endl<<"Oracle Version "<<version<<endl<<"Updated as of "<<versionDate<<endl<<endl;}
 
-void clear_com(string fileadd) {system("cls");printFile(fileadd + "MessageLogs/StrtMsg.dat");}
+void clear_com(string fileadd) {system("cls");printFile(fileadd + "MessageLogs/StrtMsg.DAT");}
 
 void run_com(string fileadd)
 {
@@ -74,7 +74,7 @@ void run_com(string fileadd)
     getline(cin,input,'\n');
     if(input == "list")
     {
-        printFile(fileadd + "MessageLogs/progRef.dat");
+        printFile(fileadd + "MessageLogs/progRef.DAT");
         cout<<endl;
         run_com(fileadd);
     }
