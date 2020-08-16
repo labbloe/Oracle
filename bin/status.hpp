@@ -17,39 +17,37 @@ class ipinfo
     void ipInfoFiller(string sectionName, string fileadd);
 };
 
-void startup()
+void userInfo::startup()
 {
-    string userFirstName;
-    string userLastName;
-    string userEmail;
-    string userPhone;
     fstream(userFile);
     userFile.open("../bin/data/user/info.DAT");
     if(userFile.is_open())
     {
-        getline(userFile,userFirstName,',');
-        getline(userFile,userLastName,',');
-        getline(userFile,userEmail,',');
-        getline(userFile,userPhone,',');
+        getline(userFile,FirstName,',');
+        getline(userFile,LastName,',');
+        getline(userFile,email,',');
+        getline(userFile,phone,',');
     }
     else
     {
         userFile.close();
         std::ofstream userFile("../bin/data/user/info.DAT");
         cout << "User Registration\n\nFirst Name: ";
-        cin >> userFirstName;
+        cin >> FirstName;
         cout << "Last Name: ";
-        cin >> userLastName;
+        cin >> LastName;
         cout << "Email (optional): ";
-        cin >> userEmail;
+        cin >> email;
         cout << "Phone Number (optional, no dashes): ";
-        cin >> userPhone;
-        cout <<"\n\n Thank you for providing your user information\nWelcome to Oracle\n\nGenerating necessary startup files...\n\n";
+        cin >> phone;
+        cout <<"\n\nThank you for providing your user information\nWelcome to Oracle\n\nGenerating necessary startup files...\n\n";
 
-        userFile << userFirstName + "," + userLastName + "," + userEmail + "," + userPhone;
+        userFile << FirstName + "," + LastName + "," + email + "," + phone;
         userFile.close();
         std::ofstream inv("../bin/data/storage/inventory.DAT");
         inv << "10,resistor,THT Resistor,SMALL_BIN_A,10,10,";
+        std::ofstream invDat("../bin/data/storage/inv_info.DAT");
+        invDat << "1,15,\nnum_of_components,num_of_types,";
     }
     
 }

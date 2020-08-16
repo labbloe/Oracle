@@ -6,11 +6,17 @@
 
 int main()
 {
-    startup();
+    //startup
+    printFile("../bin/MessageLogs/StrtMsg.DAT");
+    serverInfo server;
+    userInfo mainUser;
+    mainUser.startup();
+    server.infoSetup();
+
+
     string UserInput;
     string exit;
     int commandCnt = 1;
-    printFile("../bin/MessageLogs/StrtMsg.DAT");
     //UserGreeting();
     while(UserInput != "exit")
     {
