@@ -2,6 +2,7 @@
     Server/Client and core.cpp mixed header
 */
 
+#include <cstring>
 #include <iostream>
 #include <stdlib.h>
 #include <stdio.h>
@@ -14,17 +15,20 @@ using std::endl;
 using std::string;
 using std::stoi;
 
-void serverInfo::infoSetup()
+void serverInfo::infoSetup(string fileadd)
 {
-    string portTemp;
+    string portTemp,temp;
     fstream(STASSID);
-    STASSID.open("../bin/server/STASSID.DAT");
+    STASSID.open(fileadd + "../bin/server/STASSID.DAT");
     if(STASSID.is_open())
     {
         getline(STASSID,portTemp,',');
         defaultPort = stoi(portTemp);
+        getline(STASSID,temp,'\n');
         getline(STASSID,networkName,',');
+        getline(STASSID,temp,'\n');
         getline(STASSID,networkPass,',');
+        getline(STASSID,temp,'\n');
         getline(STASSID,hostIP,',');
     }
     else

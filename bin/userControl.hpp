@@ -64,7 +64,7 @@ void warranty_com(string fileadd) {printFile(fileadd + "MessageLogs/warranty.DAT
 
 void version_com() {cout<<endl<<"Oracle Version "<<version<<endl<<"Updated as of "<<versionDate<<endl<<endl;}
 
-void clear_com(string fileadd) {system("cls");printFile(fileadd + "MessageLogs/StrtMsg.DAT");}
+void clear_com(string fileadd) {system("clear");printFile(fileadd + "MessageLogs/StrtMsg.DAT");}
 
 void run_com(string fileadd)
 {
@@ -99,6 +99,6 @@ void server_com()
     if(exit[0] == 'y')
     {
         cout<<endl;
-        system("cd ../bin/server && a.exe");
+        system("cd ../bin/server && ./a.out");
     }
 }

@@ -38,7 +38,7 @@ class serverInfo
     string networkPass;
     string hostIP;
 
-    void infoSetup();
+    void infoSetup(string fileadd);
 };
 
 #include "Messages.hpp"

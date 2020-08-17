@@ -57,39 +57,30 @@ void integratedModuleReport(string fileadd)
     ipinfo ethernet;
     ipinfo pdanet;
     ipinfo wifi;
-    
+
+    userInfo user;
+    user.startup();
+
+    serverInfo server;
+    server.infoSetup("");
+
     cout<<endl
         <<"---------------------------"<<endl
         <<"Oracle Integration Report: "<<endl<<endl;
 
     cout<<"VERSION..............."<<version<<endl;
-
-    //int BufferSize = 32767;
-    //TCHAR infoBuf[BufferSize];
-    //DWORD bufCharCount = BufferSize;
-    //GetComputerName(infoBuf,&bufCharCount);
-    //cout<<"COMPUTER ID..........."<<infoBuf<<endl;
-
-    //TCHAR infoBufNm[BufferSize];
-    //GetUserName(infoBufNm,&bufCharCount);
-    //cout<<"USER ID..............."<<infoBufNm<<endl;
-
-    ethernet.ipInfoFiller("Ethernet adapter Ethernet:",fileadd);
-    cout<<"Ethernet NetName......"<<ethernet.netName<<endl;
-    cout<<"Ethernet IPv4........."<<ethernet.ipv4<<endl;
-
-    pdanet.ipInfoFiller("Ethernet adapter PdaNet Broadband Connection:",fileadd);
-    cout<<"PdaNet NetName........"<<pdanet.netName<<endl;
-    cout<<"PdaNet IPv4..........."<<pdanet.ipv4<<endl;
-
-    wifi.ipInfoFiller("Wireless LAN adapter Wi-Fi 2:",fileadd);
-    cout<<"WiFi NetName.........."<<wifi.netName<<endl;
-    cout<<"WiFi IPv4............."<<wifi.ipv4<<endl;
+    cout<<"VERSION UPDATED......."<<versionDate<<endl;
+    cout<<"USER ID..............."<<user.FirstName<<" "<<user.LastName<<endl;
+    cout<<"USER EMAIL............"<<user.email<<endl;
+    cout<<"USER PHONE............"<<user.phone<<endl;
+    cout<<"Ethernet NetName......"<<server.networkName<<endl;
+    cout<<"Ethernet IPv4........."<<server.hostIP<<endl;
+    cout<<"Server Port..........."<<server.defaultPort<<endl;
 
     cout<<"---------------------------"<<endl<<endl;
 }
 
-void ipinfo::ipInfoFiller(string sectionName, string fileadd)
+/*void ipinfo::ipInfoFiller(string sectionName, string fileadd)
 {
     string tempFile = "cd" + fileadd + "cmdLogs && ipconfig > iplog.txt | type iplog.txt > nul";
     const char* s = tempFile.c_str();
@@ -148,4 +139,4 @@ void ipinfo::ipInfoFiller(string sectionName, string fileadd)
     }
     myFile.close();
     
-}
+}*/

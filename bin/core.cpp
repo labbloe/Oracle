@@ -11,7 +11,7 @@ int main()
     serverInfo server;
     userInfo mainUser;
     mainUser.startup();
-    server.infoSetup();
+    server.infoSetup("");
 
 
     string UserInput;
