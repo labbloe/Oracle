@@ -12,6 +12,7 @@ int main()
     userInfo mainUser;
     mainUser.startup();
     server.infoSetup("");
+    cout<<"Welcome "<<mainUser.FirstName<<" "<<mainUser.LastName<<"\n\n";
 
 
     string UserInput;

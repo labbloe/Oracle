@@ -1,5 +1,5 @@
 /* TCP Oracle server 
-   Based on Linux TCP server from https://riptutorial.com/cplusplus/example/23999/hello-tcp-server
+   Based on Linux TCP server from https://www.thegeekstuff.com/2011/12/c-socket-programming/
 */
 
 #include "../CoreRegistry.h"
@@ -10,159 +10,59 @@
 #include <sys/socket.h>
 #include <sys/types.h>
 #include <unistd.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <errno.h>
+#include <netinet/in.h>
+//#include <time.h>
+
+#define BUFFER 1025
+#define MAX_CLIENTS 10
 
 int main(int argc, char *argv[])
 {
     serverInfo mainServer;
     mainServer.infoSetup("../");
 
-    argc = mainServer.defaultPort;
-    cout<<"port: "<<argc<<"\n";
-    if((argc > 65536) || (argc < 0)) //max port range of 65535
+    cout<<"Initializing Oracle Server\n"
+        <<"==========================\n";
+
+    if(argc != 1) 
     {
-        std::cerr << "ERROR: port '"<<argc<<"' not in port range\n";
+        std::cerr << "ERROR: *argv[] should point to singular argument (argc != 1)\n"
+                  << "USAGE: ./a.out\n";
         return -1;
     }
 
-    auto &portNum = argv[1];
-    const unsigned int backLog = 8; //Connections allowed on incoming queue
+    int listenfd = 0, connfd = 0;
+    struct sockaddr_in serv_addr;
 
-    addrinfo hints, *res, *p;
-    memset(&hints, 0, sizeof(hints));
+    char buff[BUFFER] = {0};
+    cout<<"Buffer Size: "<<BUFFER<<endl;
 
-    hints.ai_family   = AF_UNSPEC;    // don't specify which IP version to use yet
-    hints.ai_socktype = SOCK_STREAM;  // SOCK_STREAM refers to TCP, SOCK_DGRAM will be?
-    hints.ai_flags    = AI_PASSIVE;   
+    listenfd = socket(AF_INET,SOCK_STREAM,0); //AF_INET IPv4, SOCK_STREAM TCP
+    memset(&serv_addr,'0',sizeof(serv_addr));
 
-    //address info
-        // man getaddrinfo
-    int gAddRes = getaddrinfo(NULL, portNum, &hints, &res);
-    if (gAddRes != 0) {
-        std::cerr << gai_strerror(gAddRes) << "\n";
-        return -2;
+    serv_addr.sin_family = AF_INET;
+    serv_addr.sin_addr.s_addr = htonl(INADDR_ANY);
+    serv_addr.sin_port = htons(5000);
+
+    bind(listenfd,(struct sockaddr*)&serv_addr,sizeof(serv_addr));
+    listen(listenfd,MAX_CLIENTS);
+    cout<<"IP Default: 127.0.0.1\n";
+    cout<<"Max Clients: "<<MAX_CLIENTS<<endl;
+    cout<<"listening and awaiting connection from client...\n";
+
+    while(1)
+    {
+        connfd = accept(listenfd,(struct sockaddr*)NULL,NULL);
+        cout<<"Client Connection Established\nconnfd: "<<connfd<<endl;
+        snprintf(buff,BUFFER,"test");
+        write(connfd,buff,strlen(buff));
+
+        close(connfd);
+        sleep(1);
     }
 
-    std::cout << "Detecting addresses" << std::endl;
-
-    unsigned int numOfAddr = 0;
-    char ipStr[INET6_ADDRSTRLEN];    // ipv6 length makes sure both ipv4/6 addresses can be stored in this variable
-
-
-    // Now since getaddrinfo() has given us a list of addresses
-    // we're going to iterate over them and ask user to choose one
-    // address for program to bind to
-    for (p = res; p != NULL; p = p->ai_next) {
-        void *addr;
-        std::string ipVer;
-
-        // if address is ipv4 address
-        if (p->ai_family == AF_INET) {
-            ipVer             = "IPv4";
-            sockaddr_in *ipv4 = reinterpret_cast<sockaddr_in *>(p->ai_addr);
-            addr              = &(ipv4->sin_addr);
-            ++numOfAddr;
-        }
-
-        // if address is ipv6 address
-        else {
-            ipVer              = "IPv6";
-            sockaddr_in6 *ipv6 = reinterpret_cast<sockaddr_in6 *>(p->ai_addr);
-            addr               = &(ipv6->sin6_addr);
-            ++numOfAddr;
-        }
-
-        // convert IPv4 and IPv6 addresses from binary to text form
-        inet_ntop(p->ai_family, addr, ipStr, sizeof(ipStr));
-        std::cout << "(" << numOfAddr << ") " << ipVer << " : " << ipStr
-                  << std::endl;
-    }
-
-    // if no addresses found :(
-    if (!numOfAddr) {
-        std::cerr << "Found no host address to use\n";
-        return -3;
-    }
-
-    // ask user to choose an address
-    std::cout << "Enter the number of host address to bind with: ";
-    unsigned int choice = 0;
-    bool madeChoice     = false;
-    do {
-        std::cin >> choice;
-        if (choice > (numOfAddr + 1) || choice < 1) {
-            madeChoice = false;
-            std::cout << "Wrong choice, try again!" << std::endl;
-        } else
-            madeChoice = true;
-    } while (!madeChoice);
-
-
-
-    p = res;
-
-    // let's create a new socket, socketFD is returned as descriptor
-    // man socket for more information
-    // these calls usually return -1 as result of some error
-    int sockFD = socket(p->ai_family, p->ai_socktype, p->ai_protocol);
-    if (sockFD == -1) {
-        std::cerr << "Error while creating socket\n";
-        freeaddrinfo(res);
-        return -4;
-    }
-
-
-    // Let's bind address to our socket we've just created
-    int bindR = bind(sockFD, p->ai_addr, p->ai_addrlen);
-    if (bindR == -1) {
-        std::cerr << "Error while binding socket\n";
-        
-        // if some error occurs, make sure to close socket and free resources
-        close(sockFD);
-        freeaddrinfo(res);
-        return -5;
-    }
-
-
-    // finally start listening for connections on our socket
-    int listenR = listen(sockFD, backLog);
-    if (listenR == -1) {
-        std::cerr << "Error while Listening on socket\n";
-
-        // if some error occurs, make sure to close socket and free resources
-        close(sockFD);
-        freeaddrinfo(res);
-        return -6;
-    }
-
-    
-    // structure large enough to hold client's address
-    sockaddr_storage client_addr;
-    socklen_t client_addr_size = sizeof(client_addr);
-
-
-    const std::string response = "Hello World";
-
-
-    // a fresh infinite loop to communicate with incoming connections
-    // this will take client connections one at a time
-    // in further examples, we're going to use fork() call for each client connection
-    while (1) {
-
-        // accept call will give us a new socket descriptor
-        int newFD
-          = accept(sockFD, (sockaddr *) &client_addr, &client_addr_size);
-        if (newFD == -1) {
-            std::cerr << "Error while Accepting on socket\n";
-            continue;
-        }
-
-        // send call sends the data you specify as second param and it's length as 3rd param, also returns how many bytes were actually sent
-        auto bytes_sent = send(newFD, response.data(), response.length(), 0);
-        close(newFD);
-    }
-
-    close(sockFD);
-    freeaddrinfo(res);
-
-    return 0;
+    return 0;    
 }
