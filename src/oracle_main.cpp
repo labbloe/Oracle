@@ -106,33 +106,68 @@ void serverStartup()
     printf("SERVER:> Oracle Currently Listening for Clients\n");
     // Accept a client socket
     ClientSocket = accept(ListenSocket, NULL, NULL);
+    SetConsoleTextAttribute(hConsole, RED);
+    cout << "\nSERVER:> accept successful for client: " << ClientSocket <<"\n";
     if (ClientSocket == INVALID_SOCKET) {
         printf("SERVER:> accept failed with error: %d\n", WSAGetLastError());
         closesocket(ListenSocket);
         WSACleanup();
     }
-
+    SetConsoleTextAttribute(hConsole, AQUA);
+    cout << "ORACLE:RETURN> ";
+    SetConsoleTextAttribute(hConsole, WHITE);
     // No longer need server socket
     closesocket(ListenSocket);
 
-    // Receive until the peer shuts down the connection
-    do {
+    //Timeout for receiver before socket shutdown
+    struct timeval tv;
+    tv.tv_sec = 10;
+    fd_set rfds;
+    FD_ZERO(&rfds);
+    FD_SET(ClientSocket, &rfds);
+
+    // Receive until the peer shuts down the connection or timeout
+        do{
         SetConsoleTextAttribute(hConsole, RED);
-        iResult = recv(ClientSocket, recvbuf, recvbuflen, 0);
+        int recvValue = select(1, &rfds,NULL,NULL,&tv);
+        switch(recvValue)
+        {
+            case(0):
+            {
+                //Timeout
+                printf("\nSERVER:> client timeout\n");
+                WSACleanup();
+                break;
+            }
+
+            case(SOCKET_ERROR):
+            {
+                printf("\nSERVER:> socket error received with error: %d\n",WSAGetLastError());
+                break;
+            }
+            
+            default:
+            {
+                iResult = recv(ClientSocket, recvbuf, recvbuflen, 0);
+                break;
+            }
+        }
+
         if (iResult > 0) {
             printf("\nSERVER:> Bytes received: %d\n", iResult);
-
+            cout<<"SERVER:> "<<recvbuf<<"\n";
         // Echo the buffer back to the sender
             iSendResult = send( ClientSocket, recvbuf, iResult, 0 );
             if (iSendResult == SOCKET_ERROR) {
                 printf("SERVER:> send failed with error: %d\n", WSAGetLastError());
                 closesocket(ClientSocket);
                 WSACleanup();
+                iResult = 0;
             }
             printf("SERVER:> Bytes sent: %d\n", iSendResult);
         }
-        /*else if (iResult == 0)
-            printf("SERVER:> Connection closing...\n");*/
+        else if (iResult == 0)
+            printf("SERVER:> Connection closing...\n");
         else  {
             printf("\nSERVER:> recv failed with error: %d\n", WSAGetLastError());
             closesocket(ClientSocket);
@@ -148,6 +183,7 @@ void serverStartup()
     } while (exitProg == false && iResult > 0);
 
     // shutdown the connection since we're done
+    SetConsoleTextAttribute(hConsole, RED);
     iResult = shutdown(ClientSocket, SD_SEND);
     if (iResult == SOCKET_ERROR) {
         printf("SERVER:> shutdown failed with error: %d\n", WSAGetLastError());
