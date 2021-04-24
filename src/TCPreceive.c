@@ -5,15 +5,16 @@
   TCP server listens for commands from ESP client, commands are split between the device name and command received.
 */
 
+#include "OracleRegistry.h"
 #define WIN32_LEAN_AND_MEAN
-#include "OracleTCP.hpp"
 
 #define DEFAULT_PORT 2007
 // default TCP socket type
 #define DEFAULT_PROTO SOCK_STREAM
-void Usage(char *progname);
 bool bufferCheck(char* temp,char* buf);
 void serverSend_CLA(char* buf);
+
+SetConsoleTextAttribute(hConsole, RED);
 
 void Usage(char *progname)
 {
@@ -28,7 +29,7 @@ void Usage(char *progname)
     exit(1);
 }
 
-int main(int argc, char **argv)
+serverStartup()
 {
     cout<<"Oracle Server Status:\n\n";
     char Buffer[BufferSize];
@@ -38,53 +39,10 @@ int main(int argc, char **argv)
     int retval;
     int fromlen;
     int i;
-    int socket_type = DEFAULT_PROTO;
+    int socket_type = SOCK_STREAM;
     struct sockaddr_in local, from;
     WSADATA wsaData;
     SOCKET listen_socket, msgsock;
-
-    /* Parse arguments, if there are arguments supplied */
-    if (argc > 1)
-       {
-        for(i=1; i<argc; i++)
-              {
-                     // switches or options...
-            if ((argv[i][0] == '-') || (argv[i][0] == '/'))
-                     {
-                            // Change to lower...if any
-                           switch(tolower(argv[i][1]))
-                           {
-                     // if -p or /p
-                    case 'p':
-                        if (!stricmp(argv[i+1], "TCP"))
-                            socket_type = SOCK_STREAM;
-                        else if (!stricmp(argv[i+1], "UDP"))
-                            socket_type = SOCK_DGRAM;
-                        else
-                            Usage(argv[0]);
-                        i++;
-
-                        break;
-
-                     // if -i or /i, for server it is not so useful...
-                    case 'i':
-                        ip_address = argv[++i];
-                        break;
-
-                    // if -e or /e
-                    case 'e':
-                        port = atoi(argv[++i]);
-                        break;
-                     // No match...
-                    default:
-                        Usage(argv[0]);
-                        break;
-                }
-            }
-            else
-                Usage(argv[0]);
-        }
-    }
 
     // Request Winsock version 2.2
     if ((retval = WSAStartup(0x202, &wsaData)) != 0)
